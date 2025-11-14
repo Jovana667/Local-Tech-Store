@@ -20,15 +20,23 @@
     </div>
 
     <!-- Login/Register Section -->
-    <div class="container">
-      <section>
-        <h2>Login to Shop</h2>
-        <input type="email" />
-        <input type="password" />
-        <button>Login</button>
-        <button>Register</button>
-      </section>
-    </div>
+    <section id="authSection" class="auth-selection">
+      <div class="container">
+        <div class="auth-form">
+          <h2>Login to Shop</h2>
+          <input type="email" id="emailInput" placeholder="Email" required />
+          <input
+            type="password"
+            id="passwordInput"
+            placeholder="Password"
+            required
+          />
+          <button id="loginBtn" class="btn-primary">Login</button>
+          <button id="registerBtn" class="btn-secondary">Register</button>
+          <p class="auth-message" id="authMessage"></p>
+        </div>
+      </div>
+    </section>
 
     <!-- Main Shopping Section -->
     <div class="container">
