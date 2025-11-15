@@ -111,7 +111,13 @@ setTimeout(() => {
 }, 1000);
 }
 
+function showAuthMessage(message, type) {
+    authMessage.textContent = message;
+    authMessage.style.color = type === "success" ? "green" : "red";
+}
 
-
-
+// Display products
+function displayProducts(productsToShow) {
+    productsGrid.innerHTML = "";
+}
 
