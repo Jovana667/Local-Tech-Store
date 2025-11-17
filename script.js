@@ -229,3 +229,9 @@ function addToCart(productId) {
     updateCartCount();
     showNotification("Added to cart!");
 }
+
+//update cart count
+function updateCartCount() {
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    cartCount.textContent = totalItems;
+}
