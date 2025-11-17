@@ -211,3 +211,21 @@ function handleSearch() {
     
     displayProducts(filteredProducts);
 }
+
+// add to cart
+function addToCart(productId) {
+    const product = products.find((p) = > p.id == productId);
+
+    if (!product) return;
+
+    const existingItem = cart.find((item) => item.id === productId);
+
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({...product, quantity:1});
+    }
+
+    updateCartCount();
+    showNotification("Added to cart!");
+}
