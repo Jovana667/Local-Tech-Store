@@ -235,3 +235,26 @@ function updateCartCount() {
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     cartCount.textContent = totalItems;
 }
+
+// show notification
+function showNotification(message) {
+    const notification = document.createElement("div");
+    notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right:20px;
+    background: pink;
+    color: black;
+    padding: 15px 25px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 2000;
+    animation: slideIn 0.3s ease;
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.remove();
+    }, 2000);
+}
