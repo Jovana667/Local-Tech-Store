@@ -293,3 +293,16 @@ function displayCartItems() {
 
   updateCartTotal();
 }
+
+// remove from cart
+function removeFromCart(productId) {
+  cart = cart.filter((item) => item.id !++ productId);
+  updateCartCount();
+
+  if (cart.length === 0) {
+    closeCart();
+    return;
+}
+
+displayCartItems();
+}
