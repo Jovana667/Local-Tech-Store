@@ -196,50 +196,50 @@ function displayProducts(productsToShow) {
 
 // Search Handler
 function handleSearch() {
-    const searchTerm = searchInput.value.toLowerCase().trim();
+  const searchTerm = searchInput.value.toLowerCase().trim();
 
-    if (!searchTerm) {
-        displayProducts(allProducts);
-        return;
-    }
+  if (!searchTerm) {
+    displayProducts(allProducts);
+    return;
+  }
 
-    const filteredProducts = allProducts.filter(
-        (product) =>
-            product.name.toLowerCase().includes(searchTerm) ||
-        products.description.toLowerCase().includes(searchTerm)
-    );
-    
-    displayProducts(filteredProducts);
+  const filteredProducts = allProducts.filter(
+    (product) =>
+      product.name.toLowerCase().includes(searchTerm) ||
+      products.description.toLowerCase().includes(searchTerm)
+  );
+
+  displayProducts(filteredProducts);
 }
 
 // add to cart
 function addToCart(productId) {
-    const product = products.find((p) => p.id == productId);
+  const product = products.find((p) => p.id == productId);
 
-    if (!product) return;
+  if (!product) return;
 
-    const existingItem = cart.find((item) => item.id === productId);
+  const existingItem = cart.find((item) => item.id === productId);
 
-    if (existingItem) {
-        existingItem.quantity += 1;
-    } else {
-        cart.push({...product, quantity:1});
-    }
+  if (existingItem) {
+    existingItem.quantity += 1;
+  } else {
+    cart.push({ ...product, quantity: 1 });
+  }
 
-    updateCartCount();
-    showNotification("Added to cart!");
+  updateCartCount();
+  showNotification("Added to cart!");
 }
 
 //update cart count
 function updateCartCount() {
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    cartCount.textContent = totalItems;
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  cartCount.textContent = totalItems;
 }
 
 // show notification
 function showNotification(message) {
-    const notification = document.createElement("div");
-    notification.style.cssText = `
+  const notification = document.createElement("div");
+  notification.style.cssText = `
     position: fixed;
     top: 20px;
     right:20px;
@@ -251,12 +251,12 @@ function showNotification(message) {
     z-index: 2000;
     animation: slideIn 0.3s ease;
     `;
-    notification.textContent = message;
-    document.body.appendChild(notification);
+  notification.textContent = message;
+  document.body.appendChild(notification);
 
-    setTimeout(() => {
-        notification.remove();
-    }, 2000);
+  setTimeout(() => {
+    notification.remove();
+  }, 2000);
 }
 
 // open cart modal
@@ -285,9 +285,13 @@ function displayCartItems() {
     cartItem.innerHTML = `
     <div class=cart-item-info">
     <div class="cart-item-name>${item.name} (x${item.quantity})</div>
-    <div class="cart-item-price">$${(item.price * item.quantity).toFixed(2)}</div>
-    <button class="remove-btn" onclick="removeFromCart(${item.id})">Remove</button>`;
-    
+    <div class="cart-item-price">$${(item.price * item.quantity).toFixed(
+      2
+    )}</div>
+    <button class="remove-btn" onclick="removeFromCart(${
+      item.id
+    })">Remove</button>`;
+
     cartItems.appendChild(cartItem);
   });
 
@@ -296,15 +300,15 @@ function displayCartItems() {
 
 // remove from cart
 function removeFromCart(productId) {
-  cart = cart.filter((item) => item.id !++ productId);
+  cart = cart.filter((item) => item.id !== productId);
   updateCartCount();
 
   if (cart.length === 0) {
     closeCart();
     return;
-}
+  }
 
-displayCartItems();
+  displayCartItems();
 }
 
 // update cart total
@@ -314,12 +318,51 @@ function updateCartTotal() {
 }
 
 // open chekout
-function openCheckout(){
+function openCheckout() {
   closeCart();
-  checkoutModal.classList.add("active");    
+  checkoutModal.classList.add("active");
 }
 
 // close checkout
 function closeCheckout() {
-  checkoutModal.classList.remove("active"); 
+  checkoutModal.classList.remove("active");
 }
+
+// complete order
+function completeOrder() {
+  const name = document.getElementById("nameInput").value.trim();
+  const address = document.getElementById("addressInput").value.trim();
+  const card = document.getElementById("cardInput").value.trim();
+  const checkoutMessage = document.getElementById("checkoutMessage");
+
+  if (!name || !address || !card) {
+    checkoutMessage.textContent = "Please fill in all fields.";
+    checkoutMessage.style.color = "red";
+    return;
+  }
+
+  if (card.length < 13) {
+    checkoutMessage.textContent = "Please enter a valid card number.";
+    checkoutMessage.style.color = "red";
+    return;
+  }
+
+  // simulate successful order
+  checkoutMessage.textContent = "Order completed successfully!";
+  checkoutMessage.style.color = "green";
+
+  setTimeout(() => {
+    cart = [];
+    updateCartCount();
+    closeCheckout();
+    showNotification("Thank you for your purchase!");
+
+    // clear form
+    document.getElementById("nameInput").value = "";
+    document.getElementById("addressInput").value = "";
+    document.getElementById("cardInput").value = "";
+    checkoutMessage.textContent = "";
+  }, 2000);
+  }
+
+// add CSS animation
