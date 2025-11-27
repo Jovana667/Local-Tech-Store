@@ -1,6 +1,7 @@
 // Import Express
 const express = require("express");
 const path = require("path");
+const db = require("./database");
 const app = express();
 const PORT = 3000;
 
@@ -11,32 +12,83 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "../frontend")));
 
 // routes
-// get all products
+// get all products from database
 app.get("/api/products", (req, res) => {
-  const products = [
-    {
-      id: 1,
-      name: "Wireless Headphones",
-      price: 79.99,
-      emoji: "🎧",
-      description: "High-quality wireless headphones",
-    },
-    {
-      id: 2,
-      name: "Laptop",
-      price: 899.99,
-      emoji: "💻",
-      description: "Powerful and portable laptop",
-    },
-  ];
-
-  res.json(products);
+  db.all("SELECT * FROM products", [], (err, rows) => {
+    if (err) {
+        console.error('Error fetching products:', err);
+      res.status(500).json({ error: "Failed to retrieve products" });
+    } else {
+      res.json(rows);
+    }
+  });
 });
 
 // test routes
 app.get("/api/test", (req, res) => {
   res.json({ message: "API is working!" });
 });
+
+// register new user
+app.post("/api/register", (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.json({ success: false, message: "Email and password required" });
+    }
+    if (password.length < 6) {
+        return res.json({ success: false, message: "Password must be at least 6 characters" });
+    }
+
+    // check if user already exists
+    db.get('SELECT * FROM users WHERE email = ?', [email], (err, row) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.json({ success: false, message: "Database error"})
+        }
+        if (row) {
+            return res.json({ success: false, message: "Email already registered"})
+        }
+        // inser new user 
+        db.run('INSERT INTO users (email, password) VALUES (?, ?)', [email, password], function(err) {
+           if (err) {
+            console.error('Error creating user:', err);
+            return res.json({ success: false, message: "Failed to create user"});
+           } 
+           res.json({ 
+            success: true,
+            message: "Registration successful!",
+            user: { id: this.lastID, email: email }
+           });
+        });
+    });
+});
+
+// login
+app.post("/api/login", (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.json({ success: false, message: "Email and password required"});
+    }
+
+    // find user in database
+    db.get('SELECT * FROM users WHERE email = ? AND password = ?', [email, password], (err, row) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.json({ success: false, message: "Database error"});
+        }
+        if (!row) {
+            return res.json({ success: false, message: "Inavlid email or password"});
+        }
+        res.json({
+            success: true,
+            message: "Login successful!",
+            user: { id: row.id, email: row.email}
+        });
+    });
+});
+
 
 // start server
 app.listen(PORT, () => {
