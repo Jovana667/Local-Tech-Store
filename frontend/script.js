@@ -80,20 +80,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // load products from backend
 async function loadProductsFromBackend() {
-  try {
-    console.log("Fetching products from backend...");
+if (!currentUser) || (!currentUser.id) {
+  console.log('No user logged in');
+  return;
+}
 
-    const response = await fetch("/api/products");
+  try {
+    const response = await fetch(`/api/cart/${currentUser.id}`);
     const data = await response.json();
 
-    console.log("products loaded:", data);
+    console.log ('Cart loaded from database:', data);
+    
+    cart = data;
+    updateCartCount();
 
-    products = data;
-    allProducts = [...data];
-
-    console.log("Products ready to display after login");
   } catch (error) {
-    console.error("Error loading products:", error);
+    console.error('Error loading cart:', error);
   }
 }
 
@@ -118,9 +120,9 @@ async function handleLogin() {
     const response = await fetch("/api/login", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password })
     });
 
     const data = await response.json();
@@ -138,7 +140,7 @@ async function handleLogin() {
       showAuthMessage(data.message, "error");
     }
   } catch (error) {
-    console.error("Login error:", error);
+    console.error('Login error:', error);
     showAuthMessage("Login failed. Please try again.", "error");
   }
 }
@@ -170,7 +172,7 @@ async function handleRegister() {
     const response = await fetch("/api/register", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email, password }),
     });
@@ -181,6 +183,10 @@ async function handleRegister() {
       currentUser = data.user;
       showAuthMessage(data.message, "success");
 
+      // new user - cart empty
+      cart = [];
+      updateCartCount();
+
       setTimeout(() => {
         authSection.classList.add("hidden");
         shopSection.classList.remove("hidden");
@@ -190,7 +196,7 @@ async function handleRegister() {
       showAuthMessage(data.message, "error");
     }
   } catch (error) {
-    console.error("Registration error:", error);
+    console.error('Registration error:', error);
     showAuthMessage("Registration failed. Please try again.", "error");
   }
 }
@@ -263,8 +269,14 @@ function handleSearch() {
 }
 
 // add to cart
-function addToCart(productId) {
+async function addToCart(productId) {
   console.log("addToCart called with productId:", productId);
+  
+  if (!currentUser || !currentUser.id) {
+    showNotification("Please login first!");
+    return;
+  }
+
   const product = products.find((p) => p.id == productId);
   console.log("Found product:", product);
 
@@ -273,46 +285,42 @@ function addToCart(productId) {
     return;
   }
 
-  const existingItem = cart.find((item) => item.id === productId);
+  try {
+    // Save to database
+    const response = await fetch('/api/cart', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userId: currentUser.id,
+        productId: productId,
+        quantity: 1
+      })
+    });
 
-  if (existingItem) {
-    existingItem.quantity += 1;
-  } else {
-    cart.push({ ...product, quantity: 1 });
+    const data = await response.json();
+
+    if (data.success) {
+      // Update local cart
+      const existingItem = cart.find((item) => item.id === productId);
+
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({ ...product, quantity: 1 });
+      }
+
+      console.log("Cart after adding:", cart);
+      updateCartCount();
+      showNotification("Added to cart!");
+    } else {
+      showNotification("Failed to add to cart");
+    }
+  } catch (error) {
+    console.error('Error adding to cart:', error);
+    showNotification("Error adding to cart");
   }
-
-  console.log("Cart after adding:", cart);
-  updateCartCount();
-  showNotification("Added to cart!");
-}
-
-//update cart count
-function updateCartCount() {
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  cartCount.textContent = totalItems;
-}
-
-// show notification
-function showNotification(message) {
-  const notification = document.createElement("div");
-  notification.style.cssText = `
-    position: fixed;
-    top: 20px;
-    right:20px;
-    background: pink;
-    color: black;
-    padding: 15px 25px;
-    border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    z-index: 2000;
-    animation: slideIn 0.3s ease;
-    `;
-  notification.textContent = message;
-  document.body.appendChild(notification);
-
-  setTimeout(() => {
-    notification.remove();
-  }, 2000);
 }
 
 // open cart modal
@@ -362,22 +370,34 @@ function displayCartItems() {
 }
 
 // remove from cart
-function removeFromCart(productId) {
-  cart = cart.filter((item) => item.id !== productId);
-  updateCartCount();
-
-  if (cart.length === 0) {
-    closeCart();
+async function removeFromCart(productId) {
+  if (!currentUser || !currentUser.id) {
     return;
   }
 
-  displayCartItems();
-}
+  try {
+    // Remove from database
+    const response = await fetch(`/api/cart/${currentUser.id}/${productId}`, {
+      method: 'DELETE'
+    });
 
-// update cart total
-function updateCartTotal() {
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  cartTotal.textContent = total.toFixed(2);
+    const data = await response.json();
+
+    if (data.success) {
+      // Update local cart
+      cart = cart.filter((item) => item.id !== productId);
+      updateCartCount();
+
+      if (cart.length === 0) {
+        closeCart();
+        return;
+      }
+
+      displayCartItems();
+    }
+  } catch (error) {
+    console.error('Error removing from cart:', error);
+  }
 }
 
 // open chekout
@@ -392,7 +412,7 @@ function closeCheckout() {
 }
 
 // complete order
-function completeOrder() {
+async function completeOrder() {
   const name = document.getElementById("nameInput").value.trim();
   const address = document.getElementById("addressInput").value.trim();
   const card = document.getElementById("cardInput").value.trim();
@@ -410,22 +430,35 @@ function completeOrder() {
     return;
   }
 
-  // simulate successful order
-  checkoutMessage.textContent = "Order completed successfully!";
-  checkoutMessage.style.color = "green";
+  try {
+    // Clear cart in database
+    if (currentUser && currentUser.id) {
+      await fetch(`/api/cart/${currentUser.id}`, {
+        method: 'DELETE'
+      });
+    }
 
-  setTimeout(() => {
-    cart = [];
-    updateCartCount();
-    closeCheckout();
-    showNotification("Thank you for your purchase!");
+    // simulate successful order
+    checkoutMessage.textContent = "Order completed successfully!";
+    checkoutMessage.style.color = "green";
 
-    // clear form
-    document.getElementById("nameInput").value = "";
-    document.getElementById("addressInput").value = "";
-    document.getElementById("cardInput").value = "";
-    checkoutMessage.textContent = "";
-  }, 2000);
+    setTimeout(() => {
+      cart = [];
+      updateCartCount();
+      closeCheckout();
+      showNotification("Thank you for your purchase!");
+
+      // clear form
+      document.getElementById("nameInput").value = "";
+      document.getElementById("addressInput").value = "";
+      document.getElementById("cardInput").value = "";
+      checkoutMessage.textContent = "";
+    }, 2000);
+  } catch (error) {
+    console.error('Error completing order:', error);
+    checkoutMessage.textContent = "Order failed. Please try again.";
+    checkoutMessage.style.color = "red";
+  }
 }
 
 // add CSS animation
