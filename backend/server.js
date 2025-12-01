@@ -3,6 +3,7 @@ const express = require("express");
 const path = require("path");
 const db = require("./database");
 const app = express();
+const bcrypt = require('bcrypt'); 
 const PORT = 3000;
 
 // middleware to parse JSON
@@ -29,49 +30,57 @@ app.get("/api/test", (req, res) => {
   res.json({ message: "API is working!" });
 });
 
-// register new user
-app.post("/api/register", (req, res) => {
+// ========== UPDATED REGISTRATION ROUTE ==========
+app.post("/api/register", async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
     return res.json({ success: false, message: "Email and password required" });
   }
+
   if (password.length < 6) {
-    return res.json({
-      success: false,
-      message: "Password must be at least 6 characters",
-    });
+    return res.json({ success: false, message: "Password must be at least 6 characters" });
   }
 
-  // check if user already exists
-  db.get("SELECT * FROM users WHERE email = ?", [email], (err, row) => {
-    if (err) {
-      console.error("Database error:", err);
-      return res.json({ success: false, message: "Database error" });
-    }
-    if (row) {
-      return res.json({ success: false, message: "Email already registered" });
-    }
-    // inser new user
-    db.run(
-      "INSERT INTO users (email, password) VALUES (?, ?)",
-      [email, password],
-      function (err) {
+  try {
+    // Check if user already exists
+    db.get('SELECT * FROM users WHERE email = ?', [email], async (err, row) => {
+      if (err) {
+        console.error('Database error:', err);
+        return res.json({ success: false, message: "Database error" });
+      }
+
+      if (row) {
+        return res.json({ success: false, message: "Email already registered" });
+      }
+
+      // Hash password with bcrypt (10 salt rounds)
+      const hashedPassword = await bcrypt.hash(password, 10);
+      console.log('Original password:', password);
+      console.log('Hashed password:', hashedPassword);
+
+      // Insert new user with hashed password
+      db.run('INSERT INTO users (email, password) VALUES (?, ?)', [email, hashedPassword], function(err) {
         if (err) {
-          console.error("Error creating user:", err);
+          console.error('Error creating user:', err);
           return res.json({ success: false, message: "Failed to create user" });
         }
-        res.json({
-          success: true,
+
+        console.log('User created with ID:', this.lastID);
+        res.json({ 
+          success: true, 
           message: "Registration successful!",
-          user: { id: this.lastID, email: email },
+          user: { id: this.lastID, email: email }
         });
-      }
-    );
-  });
+      });
+    });
+  } catch (error) {
+    console.error('Bcrypt error:', error);
+    res.json({ success: false, message: "Server error" });
+  }
 });
 
-// login
+// ========== UPDATED LOGIN ROUTE ==========
 app.post("/api/login", (req, res) => {
   const { email, password } = req.body;
 
@@ -79,28 +88,38 @@ app.post("/api/login", (req, res) => {
     return res.json({ success: false, message: "Email and password required" });
   }
 
-  // find user in database
-  db.get(
-    "SELECT * FROM users WHERE email = ? AND password = ?",
-    [email, password],
-    (err, row) => {
-      if (err) {
-        console.error("Database error:", err);
-        return res.json({ success: false, message: "Database error" });
-      }
-      if (!row) {
-        return res.json({
-          success: false,
-          message: "Inavlid email or password",
-        });
-      }
-      res.json({
-        success: true,
-        message: "Login successful!",
-        user: { id: row.id, email: row.email },
-      });
+  // Find user in database
+  db.get('SELECT * FROM users WHERE email = ?', [email], async (err, row) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.json({ success: false, message: "Database error" });
     }
-  );
+
+    if (!row) {
+      return res.json({ success: false, message: "Invalid email or password" });
+    }
+
+    try {
+      // Compare entered password with hashed password in database
+      const match = await bcrypt.compare(password, row.password);
+      
+      console.log('Password match:', match);
+      
+      if (!match) {
+        return res.json({ success: false, message: "Invalid email or password" });
+      }
+
+      // Password correct!
+      res.json({ 
+        success: true, 
+        message: "Login successful!",
+        user: { id: row.id, email: row.email }
+      });
+    } catch (error) {
+      console.error('Password comparison error:', error);
+      res.json({ success: false, message: "Server error" });
+    }
+  });
 });
 
 // get users cart
