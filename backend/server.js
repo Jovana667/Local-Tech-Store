@@ -130,7 +130,7 @@ app.get("/api/cart/:userId", (req, res) => {
     `
         SELECT cart.id, cart.quantity, products.*
         FROM cart
-        JOIN products ON cart.products_id = products.id
+JOIN products ON cart.product_id = products.id
         WHERE cart.user_id = ?
         `,
     [userId],
