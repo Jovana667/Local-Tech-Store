@@ -116,15 +116,15 @@ function insertSampleProducts() {
           name: "Wireless Headphones",
           price: 79.99,
           emoji: "🎧",
-          description: "High-quality wireless headphones with noise cancellation",
+          description: "High-quality wireless headphones",
         },
         {
           name: "Laptop",
           price: 899.99,
           emoji: "💻",
-          description: "Powerful laptop for work and gaming",
+          description: "Powerful and portable laptop",
         },
-        {
+         {
           name: "Smartphone",
           price: 699.99,
           emoji: "📱",
@@ -173,7 +173,6 @@ function insertSampleProducts() {
           description: "Bluetooth speakers with great sound",
         }
       ];
-
 
       const stmt = db.prepare(
         "INSERT INTO products(name, price, emoji, description) VALUES (?, ?, ?, ?)"
