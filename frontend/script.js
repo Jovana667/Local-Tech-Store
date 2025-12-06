@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
   cartBtn.addEventListener("click", openCart);
   searchBtn.addEventListener("click", handleSearch);
   searchInput.addEventListener("keyup", (e) => {
-    if (e.key === "Enter") handleSearch();
+    if (e.key === "Enter") handleSearch(e);
   });
   checkoutBtn.addEventListener("click", openCheckout);
   completeOrderBtn.addEventListener("click", completeOrder);
@@ -299,9 +299,10 @@ async function displayProducts(productsToShow) {
 }
 
 // Search Handler
-function handleSearch() {
+function handleSearch(e) {
+   if (e) e.preventDefault(); 
   const searchTerm = searchInput.value.toLowerCase().trim();
-
+  e.preventDefault();
   if (!searchTerm) {
     displayProducts(allProducts);
     return;
