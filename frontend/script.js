@@ -258,8 +258,10 @@ async function displayProducts(productsToShow) {
     try {
       const imgResponse = await fetch(`/api/product-image/${product.name}`);
       const imgData = await imgResponse.json();
+      const productimageUrl = imgData.imageUrl;
 
       if (imgData.imageUrl) {
+        product.imageUrl = imgData.imageUrl;
         // Use real image if available
         imageHtml = `<img src="${imgData.imageUrl}" alt="${product.name}" class="product-image-photo" />`;
       }
@@ -437,6 +439,7 @@ function displayCartItems() {
     cartItem.innerHTML = `
       <div class="cart-item-info">
         <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-image"><img src="${item.imageUrl}" alt="${item.name}"></div>
         <div class="cart-item-controls">
           <button class="qty-btn" onclick="decrementQuantity(${
             item.id
