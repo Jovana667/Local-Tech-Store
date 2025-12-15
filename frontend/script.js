@@ -152,6 +152,13 @@ document.addEventListener("DOMContentLoaded", function () {
         // Update UI to show logged-in state
         updateAuthUI();
       }
+
+      // Load cart from localStorage
+      const savedCart = localStorage.getItem("cart");
+      if (savedCart) {
+        cart = JSON.parse(savedCart);
+        updateCartCount();
+      }
     } catch (error) {
       console.error("Error loading products:", error);
     }
@@ -280,6 +287,7 @@ function handleLogout() {
 
   // clear cart on logout
   cart = [];
+  localStorage.removeItem("cart");
   updateCartCount();
   updateAuthUI();
 
@@ -301,9 +309,13 @@ async function displayProducts(productsToShow) {
 
   // Show each product
   for (const product of productsToShow) {
+    // Create column wrapper for Bootstrap grid
+    const colDiv = document.createElement("div");
+    colDiv.className = "col";
+
     // Create product card
     const productCard = document.createElement("div");
-    productCard.className = "card product-card";
+    productCard.className = "card product-card h-100";
 
     // Start with emoji as default
     let imageHtml = `<div class="product-image text-center">${product.emoji}</div>`;
@@ -345,7 +357,8 @@ async function displayProducts(productsToShow) {
         </div>
     `;
 
-    productsGrid.appendChild(productCard);
+    colDiv.appendChild(productCard);
+    productsGrid.appendChild(colDiv);
   }
 
   // Show message if no products
@@ -435,6 +448,9 @@ async function addToCart(productId) {
 function updateCartCount() {
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   cartCount.textContent = totalItems;
+
+  // Save cart to localStorage
+  localStorage.setItem("cart", JSON.stringify(cart));
 }
 
 // show notification
@@ -670,16 +686,13 @@ async function openCheckout() {
     );
 
     // Call backend to create Stripe checkout session
-    const response = await fetch(
-      "http://localhost:3000/api/create-checkout-session",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ cart }),
-      }
-    );
+    const response = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ cart }),
+    });
 
     const data = await response.json();
 

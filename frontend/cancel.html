@@ -3,87 +3,71 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Payment Cancelled - Local Grocer</title>
+    <title>Payment Cancelled - Local Tech Store</title>
+    <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
     <link rel="stylesheet" href="styles.css" />
-    <style>
-      .cancel-container {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-      }
-      .cancel-card {
-        background: white;
-        border-radius: 20px;
-        padding: 3rem;
-        text-align: center;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        max-width: 500px;
-      }
-      .cancel-icon {
-        width: 100px;
-        height: 100px;
-        background: #dc3545;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 2rem;
-        animation: scaleIn 0.5s ease-out;
-      }
-      .cancel-icon svg {
-        width: 50px;
-        height: 50px;
-        stroke: white;
-        stroke-width: 3;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        fill: none;
-      }
-      @keyframes scaleIn {
-        from {
-          transform: scale(0);
-        }
-        to {
-          transform: scale(1);
-        }
-      }
-      .btn-home {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        border: none;
-        color: white;
-        padding: 12px 40px;
-        border-radius: 25px;
-        font-weight: 600;
-        margin-top: 1rem;
-      }
-      .btn-home:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-      }
-    </style>
   </head>
   <body>
-    <div class="cancel-container">
-      <div class="cancel-card">
-        <div class="cancel-icon">
-          <svg viewBox="0 0 24 24">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
+    <!-- Navbar Header (consistent with main app) -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+      <div class="container">
+        <a class="navbar-brand fw-bold fs-3" href="/">
+          <i class="bi bi-cpu-fill text-primary me-2"></i>Local Tech Store
+        </a>
+      </div>
+    </nav>
+
+    <!-- Cancel Message -->
+    <div class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+          <div class="card shadow-lg border-0 text-center">
+            <div class="card-body p-5">
+              <!-- Cancel Icon -->
+              <div class="mb-4">
+                <div
+                  class="d-inline-flex align-items-center justify-content-center rounded-circle bg-warning"
+                  style="width: 100px; height: 100px"
+                >
+                  <i
+                    class="bi bi-exclamation-triangle-fill text-white"
+                    style="font-size: 4rem"
+                  ></i>
+                </div>
+              </div>
+
+              <h1 class="card-title text-warning mb-3">Payment Cancelled</h1>
+              <p class="card-text text-muted mb-4 fs-5">
+                Your payment was cancelled. No charges were made to your
+                account.
+              </p>
+
+              <div class="alert alert-info mb-4" role="alert">
+                <i class="bi bi-cart-fill me-2"></i>
+                Your items are still in your cart if you'd like to try again.
+              </div>
+
+              <div class="d-grid gap-2">
+                <a href="/" class="btn btn-primary btn-lg">
+                  <i class="bi bi-arrow-left me-2"></i>Return to Shop
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
-        <h1 class="mb-3">Payment Cancelled</h1>
-        <p class="text-muted mb-4">
-          Your payment was cancelled. No charges were made to your account. Your
-          items are still in your cart if you'd like to try again.
-        </p>
-        <a href="/" class="btn btn-home">Return to Shop</a>
       </div>
     </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
