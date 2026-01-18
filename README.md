@@ -1,7 +1,7 @@
 # Local Grocer 🛒
 
 ## Description
-Local Grocer is an all-in-one online grocery shopping application where you can browse and purchase everything from fresh fruits and vegetables to self-care products and cleaning supplies. If you need it, we stock it!
+Local Grocer is an all-in-one online grocery shopping application where you can browse and purchase everything for your home office. If you need it, we stock it!
 
 ## Features
 - 🔐 User authentication (login system)
