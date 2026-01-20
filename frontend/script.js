@@ -344,10 +344,9 @@ async function displayProducts(productsToShow) {
           <p class="card-text">${product.description}</p>
         </div>
         <div class="card-footer">
-          <div class="d-flex justify-content-between align-items-center">
-            <span class="product-price fw-bold text-success">$${product.price.toFixed(
-              2
-            )}</span>
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">            <span class="product-price fw-bold text-success">$${product.price.toFixed(
+      2,
+    )}</span>
             <button class="btn btn-primary btn-sm" onclick="addToCart(${
               product.id
             })">
@@ -381,7 +380,7 @@ function handleSearch(e) {
   const filteredProducts = allProducts.filter(
     (product) =>
       product.name.toLowerCase().includes(searchTerm) ||
-      product.description.toLowerCase().includes(searchTerm)
+      product.description.toLowerCase().includes(searchTerm),
   );
 
   displayProducts(filteredProducts);
@@ -510,8 +509,8 @@ function displayCartItems() {
       <div class="cart-item-info">
         <div class="cart-item-name">${item.name}</div>
         <div class="cart-item-image"><img src="${item.imageUrl}" alt="${
-      item.name
-    }"></div>
+          item.name
+        }"></div>
         <div class="cart-item-controls">
           <button class="qty-btn" onclick="decrementQuantity(${
             item.id
@@ -522,7 +521,7 @@ function displayCartItems() {
           })">+</button>
         </div>
         <div class="cart-item-price">$${(item.price * item.quantity).toFixed(
-          2
+          2,
         )}</div>
         <button class="remove-btn" onclick="removeFromCart(${
           item.id
@@ -682,7 +681,7 @@ async function openCheckout() {
         cart: cart,
         userId: currentUser.id,
         total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
-      })
+      }),
     );
 
     // Call backend to create Stripe checkout session
@@ -735,7 +734,7 @@ async function completeOrder() {
   try {
     const total = cart.reduce(
       (sum, item) => sum + item.price * item.quantity,
-      0
+      0,
     );
 
     // Save order to database
@@ -846,7 +845,7 @@ function displayOrders(orders) {
       <p><strong>Name:</strong> ${order.name}</p>
       <p><strong>Address:</strong> ${order.address}</p>
       <p><strong>Total:</strong> <span style="color: #28a745; font-size: 20px; font-weight: bold;">$${order.total.toFixed(
-        2
+        2,
       )}</span></p>
       <p><strong>Status:</strong> <span class="order-status">${
         order.status
