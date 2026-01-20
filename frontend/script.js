@@ -15,7 +15,16 @@ let authSection,
   emailInput,
   passwordInput,
   authMessage,
-  loginPromptBtn;
+  loginPromptBtn,
+  registerSection,
+  showRegisterBtn,
+  backToLoginBtn,
+  registerFirstNameInput,
+  registerLastNameInput,
+  registerEmailInput,
+  registerPasswordInput,
+  registerConfirmPasswordInput,
+  registerMessage;
 let productsGrid, cartBtn, cartCount, cartModal, checkoutModal;
 let cartItems, cartTotal, searchInput, searchBtn, checkoutBtn, completeOrderBtn;
 let ordersSection, ordersList, backToShopBtn, viewOrdersBtn;
@@ -39,6 +48,15 @@ document.addEventListener("DOMContentLoaded", function () {
   passwordInput = document.getElementById("passwordInput");
   authMessage = document.getElementById("authMessage");
   loginPromptBtn = document.getElementById("loginPromptBtn");
+  registerSection = document.getElementById("registerSection");
+  showRegisterBtn = document.getElementById("showRegisterBtn");
+  backToLoginBtn = document.getElementById("backToLoginBtn");
+  registerFirstNameInput = document.getElementById("registerFirstNameInput");
+  registerLastNameInput = document.getElementById("registerLastNameInput");
+  registerEmailInput = document.getElementById("registerEmailInput");
+  registerPasswordInput = document.getElementById("registerPasswordInput");
+  registerConfirmPasswordInput = document.getElementById("registerConfirmPasswordInput");
+  registerMessage = document.getElementById("registerMessage");
   productsGrid = document.getElementById("productsGrid");
   cartBtn = document.getElementById("cartBtn");
   cartCount = document.getElementById("cartCount");
@@ -65,6 +83,8 @@ document.addEventListener("DOMContentLoaded", function () {
   loginBtn.addEventListener("click", handleLogin);
   logoutBtn.addEventListener("click", handleLogout);
   registerBtn.addEventListener("click", handleRegister);
+  showRegisterBtn.addEventListener("click", showRegisterPage);
+  backToLoginBtn.addEventListener("click", backToLogin);
   loginPromptBtn.addEventListener("click", showAuthSection);
   backToShopBtn.addEventListener("click", backToShop);
   viewOrdersBtn.addEventListener("click", viewOrders);
@@ -219,62 +239,120 @@ async function handleLogin() {
 async function handleRegister() {
   console.log("Register button clicked!");
 
-  const email = emailInput.value.trim();
-  const password = passwordInput.value.trim();
+  const firstName = registerFirstNameInput.value.trim();
+  const lastName = registerLastNameInput.value.trim();
+  const email = registerEmailInput.value.trim();
+  const password = registerPasswordInput.value.trim();
+  const confirmPassword = registerConfirmPasswordInput.value.trim();
 
-  if (!email || !password) {
-    showAuthMessage("please enter both email and password", "error");
+  // Validation
+  if (!firstName || !lastName || !email || !password || !confirmPassword) {
+    showRegisterMessage("Please fill in all fields", "error");
     return;
   }
 
   if (!email.includes("@")) {
-    showAuthMessage("Please enter a valid email address", "error");
+    showRegisterMessage("Please enter a valid email address", "error");
     return;
   }
+
   if (password.length < 6) {
-    showAuthMessage("Password must be at least 6 characters", "error");
+    showRegisterMessage("Password must be at least 6 characters", "error");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    showRegisterMessage("Passwords do not match", "error");
     return;
   }
 
   try {
-    // send rregister request to backend
+    // Send registration request
     const response = await fetch("/api/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({
+        firstName,
+        lastName,
+        email,
+        password,
+      }),
     });
 
     const data = await response.json();
 
     if (data.success) {
-      currentUser = data.user;
-      localStorage.setItem("currentUser", JSON.stringify(data.user));
-      console.log("User registered, currentUser:", currentUser);
-      showAuthMessage(data.message, "success");
-      updateAuthUI();
+      showRegisterMessage(
+        "Registration successful! Redirecting to login...",
+        "success",
+      );
 
-      // new user - cart empty
-      cart = [];
-      updateCartCount();
+      // Clear form
+      registerFirstNameInput.value = "";
+      registerLastNameInput.value = "";
+      registerEmailInput.value = "";
+      registerPasswordInput.value = "";
+      registerConfirmPasswordInput.value = "";
 
+      // Redirect to login after 2 seconds
       setTimeout(() => {
-        authSection.classList.add("hidden");
-        shopSection.classList.remove("hidden");
-      }, 1000);
+        registerSection.classList.add("hidden");
+        authSection.classList.remove("hidden");
+      }, 2000);
     } else {
-      showAuthMessage(data.message, "error");
+      showRegisterMessage(data.message, "error");
     }
   } catch (error) {
     console.error("Registration error:", error);
-    showAuthMessage("Registration failed. Please try again.", "error");
+    showRegisterMessage("Registration failed. Please try again.", "error");
   }
 }
 
 function showAuthMessage(message, type) {
   authMessage.textContent = message;
-  authMessage.style.color = type === "success" ? "green" : "red";
+  authMessage.className = `alert alert-${type === "success" ? "success" : "danger"} mt-3`;
+  authMessage.classList.remove("d-none");
+
+  // Auto-hide success messages after 3 seconds
+  if (type === "success") {
+    setTimeout(() => {
+      authMessage.classList.add("d-none");
+    }, 3000);
+  }
+}
+
+function showRegisterMessage(message, type) {
+  registerMessage.textContent = message;
+  registerMessage.className = `alert alert-${type === "success" ? "success" : "danger"} mt-3`;
+  registerMessage.classList.remove("d-none");
+
+  // Auto-hide success messages after 3 seconds
+  if (type === "success") {
+    setTimeout(() => {
+      registerMessage.classList.add("d-none");
+    }, 3000);
+  }
+}
+
+// Show register page
+function showRegisterPage() {
+  authSection.classList.add("hidden");
+  registerSection.classList.remove("hidden");
+}
+
+// Back to login page
+function backToLogin() {
+  registerSection.classList.add("hidden");
+  authSection.classList.remove("hidden");
+  // Clear register form
+  registerFirstNameInput.value = "";
+  registerLastNameInput.value = "";
+  registerEmailInput.value = "";
+  registerPasswordInput.value = "";
+  registerConfirmPasswordInput.value = "";
+  registerMessage.classList.add("d-none");
 }
 
 // log out handler
