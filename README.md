@@ -1,7 +1,7 @@
-# Local Grocer 🛒
+# Local Tech Store 🛒
 
 ## Description
-Local Grocer is an all-in-one online grocery shopping application where you can browse and purchase everything from fresh fruits and vegetables to self-care products and cleaning supplies. If you need it, we stock it!
+Local Grocer is an all-in-one online grocery shopping application where you can browse and purchase everything for your home office. If you need it, we stock it!
 
 ## Features
 - 🔐 User authentication (login system)
@@ -12,20 +12,22 @@ Local Grocer is an all-in-one online grocery shopping application where you can 
 - ✨ Clean, modern UI with smooth transitions
 
 ## Technologies Used
-- **HTML5** - Structure and content
-- **CSS3** - Styling and layout (Flexbox, gradients, animations)
-- **JavaScript (ES6)** - Interactive functionality and DOM manipulation
+- **Frontend:** HTML5, CSS3, JavaScript (ES6)
+- **Backend:** Node.js, Express.js
+- **Database:** SQLite
+- **Authentication:** bcrypt for password hashing
+- **Deployment:** AWS Elastic Beanstalk
+- **Payment Integration:** Stripe API (optional)
 
-## Installation
-1. Clone the repository:
-```bash
-   git clone https://github.com/yourusername/local-grocer.git
-```
-2. Navigate to the project directory:
-```bash
-   cd local-grocer
-```
-3. Open `index.html` in your browser or use Live Server in VS Code
+## Cloud Deployment
+This application is deployed on **AWS Elastic Beanstalk**, demonstrating:
+- Cloud infrastructure configuration and management
+- Scalable web application deployment
+- Environment configuration with AWS console
+- Single-instance EC2 deployment for cost optimization
+- Production-ready Node.js application hosting
+
+The deployment showcases practical DevOps skills including environment setup, dependency management, and cloud platform deployment workflows.
 
 ## Usage
 1. Enter any email and password to log in (demo authentication)
@@ -35,20 +37,32 @@ Local Grocer is an all-in-one online grocery shopping application where you can 
 5. Click the cart button to view your cart
 6. Proceed to checkout and complete your order
 
+## API Endpoints
+- `GET /api/products` - Fetch all products
+- `POST /api/register` - Register new user
+- `POST /api/login` - User login
+- `GET /api/cart/:userId` - Get user's cart
+- `POST /api/cart` - Add item to cart
+- `DELETE /api/cart/:userId/:productId` - Remove item from cart
+- `POST /api/orders` - Save order
+- `GET /api/orders/:userId` - Get user order history
+
 ## Screenshots
 ![Login Screen](screenshots/login.png)
 ![Product Browse](screenshots/products.png)
 ![Shopping Cart](screenshots/cart.png)
 
 ## Future Enhancements
-- Real authentication with backend
-- Product categories and filtering
-- User order history
-- Payment integration
-- Delivery scheduling
+- JWT-based authentication with sessions
+- Product categories and advanced filtering
+- Admin dashboard for inventory management
+- Email notifications for orders
+- Multi-region AWS deployment
+- CI/CD pipeline integration
+- Redis caching layer
 
 ## Deployed Application
-🔗 [Live Demo](https://yourusername.github.io/local-grocer)
+🌐 **Live Demo:** http://localtechstore-env.eba-xgrhec4p.ap-southeast-2.elasticbeanstalk.com/
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
@@ -57,5 +71,4 @@ This project is licensed under the [MIT License](LICENSE).
 **Jovana** - [GitHub](https://github.com/jovana667)
 
 ## Acknowledgments
-Built as a learning project to practice HTML, CSS, and JavaScript fundamentals.
-```
+Built as a portfolio project to demonstrate full-stack development skills including frontend design, backend API development, database management, and cloud deployment on AWS.
