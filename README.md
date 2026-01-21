@@ -48,9 +48,11 @@ The deployment showcases practical DevOps skills including environment setup, de
 - `GET /api/orders/:userId` - Get user order history
 
 ## Screenshots
-![Login Screen](screenshots/login.png)
-![Product Browse](screenshots/products.png)
-![Shopping Cart](screenshots/cart.png)
+<img width="653" height="806" alt="Login" src="https://github.com/user-attachments/assets/3fe94780-5f84-420b-8a18-426f01d5119a" />
+<img width="655" height="814" alt="browse" src="https://github.com/user-attachments/assets/9cd61c3f-7100-48c0-b1aa-16abe9c01bde" />
+<img width="581" height="836" alt="checkout" src="https://github.com/user-attachments/assets/4ca0c9ff-901b-4099-b2a1-77e8c5db1636" />
+<img width="645" height="689" alt="success" src="https://github.com/user-attachments/assets/760f2f4f-daa9-4741-8ac6-32c2c61e62da" />
+
 
 ## Future Enhancements
 - JWT-based authentication with sessions
