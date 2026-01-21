@@ -1,0 +1,349 @@
+/* ========================================
+   CUSTOM STYLES FOR LOCAL GROCER
+   Using Bootstrap 5 + Custom Branding
+   ======================================== */
+
+:root {
+  --primary-green: #28a745;
+  --dark-bg: #212529;
+  --light-bg: #f8f9fa;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--light-bg);
+  min-height: 100vh;
+}
+
+/* ========================================
+   AUTH SECTION
+   ======================================== */
+.auth-section {
+  min-height: calc(100vh - 56px);
+  background: var(--light-bg);
+  display: flex;
+  align-items: center;
+}
+
+/* ========================================
+   PRODUCTS GRID (Bootstrap Grid Override)
+   ======================================== */
+.product-card {
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15) !important;
+}
+
+.product-image-photo {
+  width: 100%;
+  height: 200px;
+  object-fit: contain; /* Shows full image, may have empty space */
+  background-color: #f8f9fa; /* Light background for empty space */
+}
+
+.product-image {
+  width: 100%;
+  height: 200px;
+  background-color: #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+}
+
+.product-price {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary-green);
+}
+
+/* ========================================
+   CART ITEMS IN MODAL
+   ======================================== */
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.cart-item:last-child {
+  border-bottom: none;
+}
+
+.cart-item-image {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.cart-item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cart-item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.cart-item-name {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.cart-item-price {
+  color: #28a745;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.cart-item-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+/* modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.close,
+.close-checkout {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #aaa;
+}
+
+.close:hover,
+.close-checkout:hover {
+  color: #000;
+}
+
+.cart-total {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid #eee;
+}
+
+/* Buttons */
+.btn-custom {
+  width: 100%;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-custom:hover {
+  background-color: #218838;
+}
+
+.add-to-cart-btn {
+  width: 100%;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #218838;
+}
+
+.qty-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.qty-btn:hover {
+  background: #0056b3;
+}
+
+.qty-btn:active {
+  transform: scale(0.95);
+}
+
+.quantity {
+  min-width: 30px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.remove-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+  align-self: flex-start;
+  width: auto;
+}
+
+.remove-btn:hover {
+  background: #c82333;
+}
+
+/* ========================================
+   ORDER CARDS
+   ======================================== */
+.order-card {
+  background: white;
+  padding: 25px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-left: 5px solid var(--primary-green);
+  transition: all 0.3s;
+}
+
+.order-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.order-card h3 {
+  color: var(--primary-green);
+  margin-bottom: 15px;
+}
+
+.order-status {
+  display: inline-block;
+  padding: 5px 15px;
+  border-radius: 20px;
+  background: var(--primary-green);
+  color: white;
+  font-weight: bold;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+}
+
+.no-orders {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6c757d;
+}
+
+.no-orders-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+.hidden {
+  display: none !important;
+}
+
+/* Loading animation for images */
+.product-image-loading {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ========================================
+   RESPONSIVE ADJUSTMENTS
+   ======================================== */
+@media (max-width: 768px) {
+  .product-image,
+  .product-image-photo {
+    height: 180px;
+  }
+
+  .product-image {
+    font-size: 3rem;
+  }
+
+  .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cart-item-image {
+    width: 100%;
+    height: 150px;
+  }
+}

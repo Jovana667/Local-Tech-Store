@@ -25,7 +25,7 @@ let authSection,
   registerPasswordInput,
   registerConfirmPasswordInput,
   registerMessage;
-let productsGrid, cartBtn, cartCount, cartModal, checkoutModal, searchBar;
+let productsGrid, cartBtn, cartCount, cartModal, checkoutModal;
 let cartItems, cartTotal, searchInput, searchBtn, checkoutBtn, completeOrderBtn;
 let ordersSection, ordersList, backToShopBtn, viewOrdersBtn;
 let loginPromptModal,
@@ -65,7 +65,6 @@ document.addEventListener("DOMContentLoaded", function () {
   cartItems = document.getElementById("cartItems");
   cartTotal = document.getElementById("cartTotal");
   searchInput = document.getElementById("searchInput");
-  searchBar = document.getElementById("searchBar");
   searchBtn = document.getElementById("searchBtn");
   checkoutBtn = document.getElementById("checkoutBtn");
   completeOrderBtn = document.getElementById("completeOrderBtn");
@@ -225,7 +224,6 @@ async function handleLogin() {
       setTimeout(() => {
         authSection.classList.add("hidden");
         shopSection.classList.remove("hidden");
-        searchBar.classList.remove("hidden");
       }, 1000);
     } else {
       showAuthMessage(data.message, "error");
@@ -378,7 +376,6 @@ function handleLogout() {
   // Hide orders section if visible, stay on shop
   ordersSection.classList.add("hidden");
   shopSection.classList.remove("hidden");
-  searchBar.classList.remove("hidden");
 
   showNotification("Logged out successfully");
 }
@@ -884,7 +881,6 @@ async function viewOrders() {
     // Hide shop, show orders
     shopSection.classList.add("hidden");
     ordersSection.classList.remove("hidden");
-    searchBar.classList.add("hidden");
 
     displayOrders(orders);
   } catch (error) {
@@ -942,7 +938,6 @@ function displayOrders(orders) {
 function backToShop() {
   ordersSection.classList.add("hidden");
   shopSection.classList.remove("hidden");
-  searchBar.classList.remove("hidden");
 }
 
 // add CSS animation
@@ -979,7 +974,6 @@ function updateAuthUI() {
 function showAuthSection() {
   authSection.classList.remove("hidden");
   shopSection.classList.add("hidden");
-  searchBar.classList.add("hidden");
 }
 
 // Modal login handler
